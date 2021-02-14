@@ -24,7 +24,7 @@ class DatababseHelper:
         self.mycursor = self.db.cursor()
 
     def create_table(self, table:str) -> None:
-        self.mycursor.execute("CREATE TABLE " + table)
+        self.mycursor.execute("CREATE TABLE " + table + " (id INT AUTO_INCREMENT PRIMARY KEY)")
 
     def add_column(self, table:str, column:str, column_type:str) -> None:
         self.mycursor.execute("ALTER TABLE " + table + " ADD COLUMN " + column + " " + column_type)
