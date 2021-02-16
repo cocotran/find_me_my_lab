@@ -68,8 +68,8 @@ body {
   }
 }
 
-.w-90 {
-  width: 90%;
+.w-85 {
+  width: 85%;
 }
 
 .autocomplete-items {
@@ -97,4 +97,62 @@ body {
   /*when navigating through the items using the arrow keys:*/
   background-color: DodgerBlue !important;
   color: #ffffff;
+}
+
+/* Style the collapsible content. Note: hidden by default */
+.content {
+  display: none;
+  transition: display 0.5s ease-out;
+}
+
+.software-name-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  margin-right: 1rem;
+  margin-top: 1rem;
+  background-color: #d5e8ff;
+  border-radius: 0.25rem;
+  color: rgba(37, 99, 235);
+}
+
+.deleteBtn {
+  margin-left: 0.5rem;
+  width: 18px;
+}
+
+.deleteBtn:hover,
+.software-name-tag:hover {
+  cursor: pointer;
+  background-color: #c6d3e2;
+}
+
+.software-list-tag {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  margin-right: 1rem;
+  margin-top: 1rem;
+  border-radius: 0.25rem;
+  --tw-bg-opacity: 1;
+  background-color: rgba(229, 231, 235, var(--tw-bg-opacity));
+  color: #1a202c;
+}
+
+.software-list-tag:hover {
+  cursor: pointer;
+}
+
+.software-list-tag-selected {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  margin-right: 1rem;
+  margin-top: 1rem;
+  border-radius: 0.25rem;
+  --tw-bg-opacity: 1;
+  background-color: rgba(59, 130, 246, var(--tw-bg-opacity));
+  color: white;
+}
+
+.software-list-tag-selected:hover {
+  cursor: pointer;
 }

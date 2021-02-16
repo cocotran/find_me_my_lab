@@ -97,6 +97,8 @@ function autocomplete(inp, arr) {
         // and simulate a click on the "active" item
         if (x) x[currentFocus].click();
       }
+    } else if (e.keyCode == 27) {
+      closeAllLists();
     }
   });
 
@@ -139,3 +141,69 @@ function autocomplete(inp, arr) {
 const searchInput = document.getElementById("search-input");
 
 autocomplete(searchInput, softwareList);
+
+// expand/collapse full software list
+const fullListExpand = document.getElementById("full-list-expand");
+fullListExpand.addEventListener("click", function () {
+  let content = document.getElementById("list-content");
+  if (content.style.display === "block") {
+    content.style.display = "none";
+  } else {
+    content.style.display = "block";
+  }
+});
+
+// choosing software function
+function chooseSoftware(inp, container) {
+  inp.addEventListener("keydown", function (e) {
+    if (e.keyCode == 13) {
+      let software = inp.value.toLowerCase();
+
+      // check if input is empty
+      if (software != "") {
+        // create a new software name tag
+        const newTagContainer = document.createElement("div");
+        newTagContainer.classList.add("software-name-tag");
+
+        const newTag = document.createElement("p");
+        // TODO: match the name in the list
+        newTag.innerHTML = software;
+        newTagContainer.appendChild(newTag);
+
+        const deleteBtn = document.createElement("img");
+        deleteBtn.src = "../static/images/delete.svg";
+        deleteBtn.classList.add("deleteBtn");
+        deleteBtn.addEventListener("click", function () {
+          container.removeChild(newTagContainer);
+        });
+        deleteBtn.addEventListener("mouseover", function () {
+          deleteBtn.src = "../static/images/delete-black.svg";
+        });
+        deleteBtn.addEventListener("mouseleave", function () {
+          deleteBtn.src = "../static/images/delete.svg";
+        });
+        newTagContainer.appendChild(deleteBtn);
+
+        container.appendChild(newTagContainer);
+      }
+    }
+  });
+}
+
+const container = document.getElementById("software-chosen");
+
+chooseSoftware(searchInput, container);
+
+// full software list
+const softwareListContainer = document.getElementById("software-list");
+for (let i = 0; i < softwareList.length; i++) {
+  // create new tag
+  const newTag = document.createElement("p");
+  newTag.innerHTML = softwareList[i];
+  newTag.classList.add("software-list-tag");
+  newTag.addEventListener("click", function () {
+    newTag.classList.toggle("software-list-tag");
+    newTag.classList.toggle("software-list-tag-selected");
+  });
+  softwareListContainer.appendChild(newTag);
+}
