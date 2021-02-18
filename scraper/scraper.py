@@ -1,12 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 
-# URL = 'https://aits.encs.concordia.ca/assets/encs/html/Software%20for%20Windows%20in%20the%20Public%20Labs.html'
-
-# for element in rows:
-#     software_lab = [i.get_text() for i in element.find_all('td')]
-#     # TODO: add data to database
-
 class Scraper:
 
     def __init__(self) -> None:
