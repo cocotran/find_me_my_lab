@@ -1,8 +1,13 @@
 from scraper.scraper import *
+from scraper.scraper_encs import *
 
 
-URL = 'https://aits.encs.concordia.ca/assets/encs/html/Software%20for%20Windows%20in%20the%20Public%20Labs.html'
-myScraper = Scraper(URL)
-tags = myScraper.get_list_from_tag("tr", "td")
+database = scrape()
+room_array = ["H811"]
+room_data = list(database.keys())
+result = {}
+for i in range(len(room_data)):
+    if room_data[i] in room_array:
+        result[room_data[i]] = database[room_data[i]]
 
-print(tags)
+print(result)

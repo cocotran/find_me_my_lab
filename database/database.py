@@ -1,6 +1,7 @@
 import mysql.connector
 import config
 
+TABLE_HOST = "labhost"
 
 class DatababseHelper:
 
@@ -23,8 +24,8 @@ class DatababseHelper:
         # initialize cursor
         self.mycursor = self.db.cursor()
 
-    def create_table(self, table:str) -> None:
-        self.mycursor.execute("CREATE TABLE " + table + " (id INT AUTO_INCREMENT PRIMARY KEY)")
+    def create_table(self, table=TABLE_HOST) -> None:
+        self.mycursor.execute("CREATE TABLE " + table + " (id INT AUTO_INCREMENT PRIMARY KEY, host VARCHAR(255), os VARCHAR(255))")
 
     def add_column(self, table:str, column:str, column_type:str) -> None:
         self.mycursor.execute("ALTER TABLE " + table + " ADD COLUMN " + column + " " + column_type)
@@ -44,9 +45,23 @@ class DatababseHelper:
         self.mycursor.execute(sql, val)
         self.db.commit()
 
+    def insert(self, host:str, os:str, table=TABLE_HOST):
+        sql = "INSERT INTO " + table + " (host, os) VALUES (%s, %s)"
+        val = (host, os)
+        self.mycursor.execute(sql, val)
+        self.db.commit()
+
     def get_lab_room_by_software(self, table:str, software:str):
         sql = ("SELECT * FROM " + table + " WHERE " + software + "=%s")
         adr = ("True", )
         self.mycursor.execute(sql, adr)
         result = self.mycursor.fetchall()
         return result
+
+    def get_all_host(self, table=TABLE_HOST):
+        self.mycursor.execute("SELECT * FROM " + table)
+        all_host = self.mycursor.fetchall()
+        return all_host
+
+    def get_host_by_room(self, software:str, table=TABLE_HOST):
+        sql = "SELECT * FROM " + table + " WHERE address ='Park Lane 38'"

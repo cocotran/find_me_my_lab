@@ -136,16 +136,19 @@ function autocomplete(inp, arr) {
 // choosing software function for search bar
 function chooseSoftware(inp, container) {
   inp.addEventListener("keydown", function (e) {
-    if (e.keyCode == 13) {
-      let software = inp.value.toLowerCase();
+    if (e.keyCode == 13) { // ENTER key
+      let softwareName = inp.value;
 
       // check if input is empty
-      if (software != "") {
+      if (softwareName != "" && softwareList.includes(softwareName)) {
         // add to chosen software list
-        chosenSoftware.push(software);
+        chosenSoftware.push(softwareName);
 
         // add software tag to required software
-        addSoftwareTag(software, container);
+        addSoftwareTag(softwareName, container);
+
+        // highlight tag in full list
+        highlightSoftwareTag(softwareName);
       }
     }
   });
@@ -157,6 +160,7 @@ function generateFullSoftwareList() {
     const currentSoftware = softwareList[i];
     // create new tag
     const newTag = document.createElement("p");
+    newTag.id = currentSoftware + "_list";
     newTag.innerHTML = currentSoftware;
     newTag.classList.add("software-list-tag");
     newTag.addEventListener("click", function () {
@@ -168,7 +172,7 @@ function generateFullSoftwareList() {
         chosenSoftware = chosenSoftware.filter(
           (item) => item !== currentSoftware
         );
-        removeSoftwareTAg(currentSoftware, softwareChosencontainer);
+        removeSoftwareTag(currentSoftware, softwareChosencontainer);
       } else {
         chosenSoftware.push(currentSoftware);
         addSoftwareTag(currentSoftware, softwareChosencontainer);
@@ -196,6 +200,14 @@ function addSoftwareTag(softwareName, container) {
   deleteBtn.classList.add("deleteBtn");
   deleteBtn.addEventListener("click", function () {
     container.removeChild(newTagContainer);
+
+    // remove software from the chosen list
+    chosenSoftware = chosenSoftware.filter(
+      (item) => item !== softwareName
+    );
+
+    // unhighlight tag in full list
+    unhighlightSoftwareTag(softwareName);
   });
   deleteBtn.addEventListener("mouseover", function () {
     deleteBtn.src = "../static/images/delete-black.svg";
@@ -209,7 +221,7 @@ function addSoftwareTag(softwareName, container) {
 }
 
 // helper function to remove software tag
-function removeSoftwareTAg(softwareName, container) {
+function removeSoftwareTag(softwareName, container) {
   const tagToRemove = document.getElementById(softwareName);
   container.removeChild(tagToRemove);
 }
@@ -227,6 +239,36 @@ function resultSoftware(arr, container) {
   }
 }
 
+
+// post request to fetch lab host by room
+function getHostByRoom(roomNumber) {
+  console.log("H881")
+  fetch("http://127.0.0.1:5000/get_lab_host_by_software", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      room_array: roomNumber
+    }),
+  })
+    .then((e) => e.json())
+    .then(e => console.log(e))
+    .catch((err) => console.log("Error"));
+}
+
+// helper function to highlight chosen software tag in the full software list
+function highlightSoftwareTag(softwareName) {
+  const tagToBeHighlighted = document.getElementById(softwareName + "_list");
+  tagToBeHighlighted.classList.add("software-list-tag-selected");
+  tagToBeHighlighted.classList.remove("software-list-tag");
+}
+
+// helper function to unhighlight chosen software tag in the full software list
+function unhighlightSoftwareTag(softwareName) {
+  const tagToBeUnhighlighted = document.getElementById(softwareName + "_list");
+  tagToBeUnhighlighted.classList.add("software-list-tag");
+  tagToBeUnhighlighted.classList.remove("software-list-tag-selected");
+}
+
 // GETTING HTML ELEMENTS
 const searchInput = document.getElementById("search-input");
 const softwareChosencontainer = document.getElementById("software-chosen");
@@ -241,8 +283,9 @@ chooseSoftware(searchInput, softwareChosencontainer);
 
 searchButton.addEventListener("click", function () {
   resultSoftware(chosenSoftware, resultSoftwareContainer);
-  // TODO: search function
+  // getHostByRoom("H811")
 });
+
 
 // fetch texts on page load
 window.onload = () => {

@@ -1,5 +1,6 @@
+from re import findall
 import requests
-import config
+from settings.config import *
 from bs4 import BeautifulSoup
 
 cookies = {
@@ -36,20 +37,49 @@ headers = {
 }
 
 data = {
-  'login_name': config.ENCS_LOGIN_NAME,
-  'user_pass': config.ENCS_PASSWORD,
+  'login_name': ENCS_LOGIN_NAME,
+  'user_pass': ENCS_PASSWORD,
   'Authenticate': 'Authenticate'
 }
 
 url = "https://fis.encs.concordia.ca/helpdesk-cgi/available-hosts-result.cgi"
 
-s = requests.Session()
+def scrape():
+    s = requests.Session()
 
-response = s.post(url=url, headers=headers, cookies=cookies, data=data)
+    response = s.post(url=url, headers=headers, cookies=cookies, data=data)
 
-soup = BeautifulSoup(response.content, 'html.parser')
+    soup = BeautifulSoup(response.content, 'html.parser')
 
-tags = soup.find_all("h3")
+    room_list = [i.get_text()[4::]  for i in soup.find_all("h3")]
+    room_list = list(filter(None, room_list))
 
-print(tags)
+    all_table_tags = soup.find_all("table")
+    table_tag_list = []
+    table_row_list = []
+
+    for element in all_table_tags:
+        table_tag = [i for i in element.find_all("tr")]
+        table_tag_list.append(table_tag)
+    table_tag_list = table_tag_list[2::]
+            
+    for i in range(len(table_tag_list)):
+        table_tag_list[i].pop(0)
+
+    for i in range(len(table_tag_list)):
+        room_set = []
+        for j in range(len(table_tag_list[i])):
+            rows = [i.get_text() for i in table_tag_list[i][j].find_all("td")]
+            room_set.append(rows)
+        table_row_list.append(room_set)
+
+
+    room_host_os_dict = {}
+
+    if len(room_list) == len(table_row_list):
+        for i in range(len(room_list)):
+            room_host_os_dict[room_list[i]] = table_row_list[i]
+
+    return room_host_os_dict
+
 
