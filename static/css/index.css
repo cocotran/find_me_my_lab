@@ -170,6 +170,12 @@ body {
   color: rgba(55, 65, 81, var(--tw-text-opacity));
 }
 
+.hosts-info-background {
+  --tw-bg-opacity: 1;
+  border-radius: 0.25rem;
+  background-color: rgba(236, 253, 245, var(--tw-bg-opacity));
+}
+
 .loader {
   margin-top: 3rem;
   margin-bottom: 1rem;

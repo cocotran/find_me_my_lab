@@ -3,6 +3,8 @@
 const softwareList = [];
 // list of chosen software
 let chosenSoftware = [];
+// variable to determine if new set of software is requested
+let chosenSoftwareCached = [];
 
 async function fetchSoftwareName() {
   fetch("http://127.0.0.1:5000/fetchSoftwareName")
@@ -295,9 +297,23 @@ async function displayHost(hostObject, container) {
       newHostRoom.innerHTML = room;
 
       const newHostName = document.createElement("div");
-      newHostName.classList.add("w-40");
+      newHostName.classList.add("w-44");
       newHostName.classList.add("cursor-pointer");
       newHostName.innerHTML = hostObject[room][i][0];
+      newHostName.addEventListener("click", function () {
+        var range = document.createRange();
+        range.selectNode(newHostName);
+        window.getSelection().removeAllRanges(); // clear current selection
+        window.getSelection().addRange(range); // to select text
+        document.execCommand("copy");
+        window.getSelection().removeAllRanges(); // to deselect
+      });
+      newHostName.addEventListener("mousedown", function () {
+        newHostName.classList.toggle("hosts-info-background");
+      });
+      newHostName.addEventListener("mouseup", function () {
+        newHostName.classList.toggle("hosts-info-background");
+      });
 
       const newHostOS = document.createElement("div");
       newHostOS.classList.add("w-10");
@@ -313,6 +329,20 @@ async function displayHost(hostObject, container) {
         ":3389" +
         "<span class='italic text-red-400'>your_username</span>" +
         "@login.encs.concordia.ca";
+      newHostSSH.addEventListener("click", function () {
+        var range = document.createRange();
+        range.selectNode(newHostSSH);
+        window.getSelection().removeAllRanges(); // clear current selection
+        window.getSelection().addRange(range); // to select text
+        document.execCommand("copy");
+        window.getSelection().removeAllRanges(); // to deselect
+      });
+      newHostSSH.addEventListener("mousedown", function () {
+        newHostSSH.classList.toggle("hosts-info-background");
+      });
+      newHostSSH.addEventListener("mouseup", function () {
+        newHostSSH.classList.toggle("hosts-info-background");
+      });
 
       // adding new tags to new big container
       newHostContainer.appendChild(newHostRoom);
@@ -325,6 +355,16 @@ async function displayHost(hostObject, container) {
     }
   }
   return true;
+}
+
+// helper function to copy text from a div
+function copyDivToClipboard(tag) {
+  var range = document.createRange();
+  range.selectNode(tag);
+  window.getSelection().removeAllRanges(); // clear current selection
+  window.getSelection().addRange(range); // to select text
+  document.execCommand("copy");
+  window.getSelection().removeAllRanges(); // to deselect
 }
 
 // function to add loading screen
@@ -358,16 +398,26 @@ const softwareListContainer = document.getElementById("software-list");
 const fullListExpand = document.getElementById("full-list-expand");
 const hostsContainer = document.getElementById("hosts-container");
 const loaderContainer = document.getElementById("loader-container");
+const resultPanel = document.getElementById("result-panel");
 
 // ASSIGNING FUNCTIONS
 autocomplete(searchInput, softwareList);
 chooseSoftware(searchInput, softwareChosencontainer);
 
 searchButton.addEventListener("click", async function () {
+  resultPanel.scrollIntoView(true, { behavior: "smooth" });
   resultSoftware(chosenSoftware, resultSoftwareContainer);
-  const rooms = await getRoomBySoftware(chosenSoftware);
-  const hosts = await getHostByRoom(rooms.result);
-  displayHost(hosts, hostsContainer).then((e) => removeLoader(loaderContainer));
+  if (
+    JSON.stringify(chosenSoftware.sort()) !=
+    JSON.stringify(chosenSoftwareCached)
+  ) {
+    const rooms = await getRoomBySoftware(chosenSoftware);
+    const hosts = await getHostByRoom(rooms.result);
+    displayHost(hosts, hostsContainer).then((e) =>
+      removeLoader(loaderContainer)
+    );
+    chosenSoftwareCached = chosenSoftware.sort();
+  }
 });
 
 // fetch texts on page load

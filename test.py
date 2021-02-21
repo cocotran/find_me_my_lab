@@ -3,7 +3,7 @@ from scraper.scraper_encs import *
 
 
 database = scrape()
-room_array = ["EV009.241", "EV009.245"]
+room_array = ["H0819-00"]
 room_data = list(database.keys())
 result = {}
 for i in range(len(room_data)):
