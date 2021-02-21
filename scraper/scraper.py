@@ -3,10 +3,7 @@ from bs4 import BeautifulSoup
 
 class Scraper:
 
-    def __init__(self) -> None:
-        pass
-
-    def __init__(self, url) -> None:
+    def __init__(self, url='https://aits.encs.concordia.ca/assets/encs/html/Software%20for%20Windows%20in%20the%20Public%20Labs.html') -> None:
         self.url = url
 
     def scrape(self) -> object:
@@ -34,3 +31,5 @@ class Scraper:
             software_lab = [i.get_text() for i in element.find_all(tag2)]
             software_list.append(software_lab)
         return software_list
+
+    

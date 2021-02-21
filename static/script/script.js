@@ -240,21 +240,6 @@ function resultSoftware(arr, container) {
 }
 
 
-// post request to fetch lab host by room
-function getHostByRoom(roomNumber) {
-  console.log("H881")
-  fetch("http://127.0.0.1:5000/get_lab_host_by_software", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      room_array: roomNumber
-    }),
-  })
-    .then((e) => e.json())
-    .then(e => console.log(e))
-    .catch((err) => console.log("Error"));
-}
-
 // helper function to highlight chosen software tag in the full software list
 function highlightSoftwareTag(softwareName) {
   const tagToBeHighlighted = document.getElementById(softwareName + "_list");
@@ -269,6 +254,37 @@ function unhighlightSoftwareTag(softwareName) {
   tagToBeUnhighlighted.classList.remove("software-list-tag-selected");
 }
 
+
+// POST request to fetch room by software
+async function getRoomBySoftware(softwareArray) {
+  const rooms = fetch("http://127.0.0.1:5000/room_by_software", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      software_array: softwareArray
+    }),
+  })
+    .then((e) => e.json())
+    // .then(e => console.log(e))
+    .catch((err) => console.log(err));
+  return rooms;
+}
+
+// post request to fetch lab host by room
+function getHostByRoom(roomNumber) {
+  fetch("http://127.0.0.1:5000/get_lab_host_by_software", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      room_array: roomNumber
+    }),
+  })
+    .then(e => e.json())
+    .then(e => console.log(e))
+    .catch((err) => console.log("Error"));
+}
+
+
 // GETTING HTML ELEMENTS
 const searchInput = document.getElementById("search-input");
 const softwareChosencontainer = document.getElementById("software-chosen");
@@ -277,13 +293,15 @@ const searchButton = document.getElementById("search-button");
 const softwareListContainer = document.getElementById("software-list");
 const fullListExpand = document.getElementById("full-list-expand");
 
+
 // ASSIGNING FUNCTIONS
 autocomplete(searchInput, softwareList);
 chooseSoftware(searchInput, softwareChosencontainer);
 
-searchButton.addEventListener("click", function () {
+searchButton.addEventListener("click", async function () {
   resultSoftware(chosenSoftware, resultSoftwareContainer);
-  // getHostByRoom("H811")
+  const rooms = await getRoomBySoftware(chosenSoftware);
+  getHostByRoom(rooms.result);
 });
 
 
