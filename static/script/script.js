@@ -136,7 +136,8 @@ function autocomplete(inp, arr) {
 // choosing software function for search bar
 function chooseSoftware(inp, container) {
   inp.addEventListener("keydown", function (e) {
-    if (e.keyCode == 13) { // ENTER key
+    if (e.keyCode == 13) {
+      // ENTER key
       let softwareName = inp.value;
 
       // check if input is empty
@@ -202,9 +203,7 @@ function addSoftwareTag(softwareName, container) {
     container.removeChild(newTagContainer);
 
     // remove software from the chosen list
-    chosenSoftware = chosenSoftware.filter(
-      (item) => item !== softwareName
-    );
+    chosenSoftware = chosenSoftware.filter((item) => item !== softwareName);
 
     // unhighlight tag in full list
     unhighlightSoftwareTag(softwareName);
@@ -239,7 +238,6 @@ function resultSoftware(arr, container) {
   }
 }
 
-
 // helper function to highlight chosen software tag in the full software list
 function highlightSoftwareTag(softwareName) {
   const tagToBeHighlighted = document.getElementById(softwareName + "_list");
@@ -254,14 +252,14 @@ function unhighlightSoftwareTag(softwareName) {
   tagToBeUnhighlighted.classList.remove("software-list-tag-selected");
 }
 
-
 // POST request to fetch room by software
 async function getRoomBySoftware(softwareArray) {
+  displayLoader(loaderContainer);
   const rooms = fetch("http://127.0.0.1:5000/room_by_software", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      software_array: softwareArray
+      software_array: softwareArray,
     }),
   })
     .then((e) => e.json())
@@ -271,19 +269,85 @@ async function getRoomBySoftware(softwareArray) {
 }
 
 // post request to fetch lab host by room
-function getHostByRoom(roomNumber) {
-  fetch("http://127.0.0.1:5000/get_lab_host_by_software", {
+async function getHostByRoom(roomNumber) {
+  const hosts = fetch("http://127.0.0.1:5000/get_lab_host_by_software", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      room_array: roomNumber
+      room_array: roomNumber,
     }),
   })
-    .then(e => e.json())
-    .then(e => console.log(e))
+    .then((e) => e.json())
+    // .then(e => console.log(e))
     .catch((err) => console.log("Error"));
+  return hosts;
 }
 
+// function to display labs info
+async function displayHost(hostObject, container) {
+  for (const room in hostObject) {
+    for (let i = 0; i < hostObject[room].length; i++) {
+      const newHostContainer = document.createElement("div");
+      newHostContainer.classList.add("host-info");
+
+      const newHostRoom = document.createElement("div");
+      newHostRoom.classList.add("w-10");
+      newHostRoom.innerHTML = room;
+
+      const newHostName = document.createElement("div");
+      newHostName.classList.add("w-40");
+      newHostName.classList.add("cursor-pointer");
+      newHostName.innerHTML = hostObject[room][i][0];
+
+      const newHostOS = document.createElement("div");
+      newHostOS.classList.add("w-10");
+      newHostOS.innerHTML = hostObject[room][i][1];
+
+      const newHostSSH = document.createElement("div");
+      newHostSSH.classList.add("w-1/2");
+      newHostSSH.classList.add("cursor-pointer");
+      newHostSSH.classList.add("break-all");
+      newHostSSH.innerHTML =
+        "ssh -L 3391:" +
+        hostObject[room][i][0] +
+        ":3389" +
+        "<span class='italic text-red-400'>your_username</span>" +
+        "@login.encs.concordia.ca";
+
+      // adding new tags to new big container
+      newHostContainer.appendChild(newHostRoom);
+      newHostContainer.appendChild(newHostName);
+      newHostContainer.appendChild(newHostOS);
+      newHostContainer.appendChild(newHostSSH);
+
+      // adding new container to parent container
+      container.appendChild(newHostContainer);
+    }
+  }
+  return true;
+}
+
+// function to add loading screen
+function displayLoader(container) {
+  const newLoader = document.createElement("div");
+  newLoader.id = "loader";
+  newLoader.classList.add("loader");
+
+  const description = document.createElement("p");
+  description.id = "loader-description";
+  description.innerHTML = "Logging in to ENCS lab info, please wait...";
+
+  container.appendChild(newLoader);
+  container.appendChild(description);
+}
+
+function removeLoader(container) {
+  const loader = document.getElementById("loader");
+  const description = document.getElementById("loader-description");
+
+  container.removeChild(loader);
+  container.removeChild(description);
+}
 
 // GETTING HTML ELEMENTS
 const searchInput = document.getElementById("search-input");
@@ -292,7 +356,8 @@ const resultSoftwareContainer = document.getElementById("result-software");
 const searchButton = document.getElementById("search-button");
 const softwareListContainer = document.getElementById("software-list");
 const fullListExpand = document.getElementById("full-list-expand");
-
+const hostsContainer = document.getElementById("hosts-container");
+const loaderContainer = document.getElementById("loader-container");
 
 // ASSIGNING FUNCTIONS
 autocomplete(searchInput, softwareList);
@@ -301,9 +366,9 @@ chooseSoftware(searchInput, softwareChosencontainer);
 searchButton.addEventListener("click", async function () {
   resultSoftware(chosenSoftware, resultSoftwareContainer);
   const rooms = await getRoomBySoftware(chosenSoftware);
-  getHostByRoom(rooms.result);
+  const hosts = await getHostByRoom(rooms.result);
+  displayHost(hosts, hostsContainer).then((e) => removeLoader(loaderContainer));
 });
-
 
 // fetch texts on page load
 window.onload = () => {

@@ -104,16 +104,22 @@
       >
         <div class="">
           <h2 class="mr-5 text-lg text-gray-900">Result for</h2>
-          <div id="result-software"> 
+          <div id="result-software">
             <!-- software tags go here -->
           </div>
         </div>
 
+        <!-- Loading icon -->
+        <div id="loader-container" class="text-center mb-14">
+          <!-- <div class="loader"></div>
+          <p class="text-xl">Logging in to ENCS lab info, please wait...</p> -->
+        </div>
+
         <!-- list of lab room -->
-        <div>
+        <div id="hosts-container">
           <!-- test -->
           <div
-            class="mt-10 pb-3 flex justify-between items-center border-b border-gray-500 text-gray-500 italic"
+            class="mt-5 pb-3 flex justify-between items-center border-b border-gray-500 text-gray-500 italic"
           >
             <div class="w-10">
               <p>Room</p>
@@ -129,26 +135,24 @@
             </div>
           </div>
 
-          <div
-            class="mt-5 pb-3 flex justify-between items-center border-b border-gray-500 text-gray-900"
+          <!-- <div
+            class="host-info"
           >
             <div class="w-10">
-              <p>H811</p>
+              H811
             </div>
-            <div class="w-40">
-              <p class="cursor-pointer">adrian.encs.concordia.ca</p>
+            <div class="w-40 cursor-pointer">
+              adrian.encs.concordia.ca
             </div>
             <div class="w-10">
-              <p class="">Window</p>
+              Window
             </div>
-            <div class="w-1/2">
-              <p class="cursor-pointer">
+            <div class="w-1/2 cursor-pointer">
                 ssh -L 3391:jensen.encs.concordia.ca:3389
                 <span class="italic text-red-400">your_username</span
                 >@login.encs.concordia.ca
-              </p>
             </div>
-          </div>
+          </div> -->
         </div>
         <!-- end list -->
       </div>
