@@ -4,6 +4,13 @@ from flask_cors import CORS, cross_origin
 from scraper.scraper import Scraper
 from scraper.scraper_encs import *
 
+from dotenv import load_dotenv
+from pathlib import Path
+
+
+env_path = Path('.') / '.env'
+load_dotenv(dotenv_path=env_path)
+
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
@@ -71,7 +78,7 @@ def reformat_room_number(room_numbers:list) -> list:
 @cross_origin()
 @app.route('/get_lab_host_by_software', methods=["POST"])
 def fetch_host():
-    database = scrape()
+    database = scrape(os.environ.get("ENCS_LOGIN_NAME"), os.environ.get("ENCS_PASSWORD"))
     room_array = request.json['room_array']
     room_array = reformat_room_number(room_array)
     # room_array = ["EV009.241", "EV009.245"]
