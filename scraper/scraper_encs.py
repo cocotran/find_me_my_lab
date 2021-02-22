@@ -1,8 +1,5 @@
-from re import findall
 import requests
-# from settings.config import *
 from bs4 import BeautifulSoup
-from boto.s3.connection import S3Connection
 import os
 
 cookies = {
@@ -39,8 +36,8 @@ headers = {
 }
 
 data = {
-  'login_name': S3Connection(os.environ['ENCS_LOGIN_NAME'], os.environ['ENCS_LOGIN_NAME']),
-  'user_pass': S3Connection(os.environ['ENCS_PASSWORD'], os.environ['ENCS_PASSWORD']),
+  'login_name': os.environ['ENCS_LOGIN_NAME'],
+  'user_pass': os.environ['ENCS_PASSWORD'],
   'Authenticate': 'Authenticate'
 }
 
