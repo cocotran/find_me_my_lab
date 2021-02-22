@@ -2,10 +2,10 @@
 
 Web application to find an available lab host with specific software<br/>
 
-# Live Demo
+## Live Demo
 https://find-me-my-lab.herokuapp.com/<br/>
 
-# Usage
+## Usage
 
 Create a .env file at root directory with your ENCS account info
 ```bash
@@ -25,7 +25,7 @@ or
 heroku local # To start a local heroku server
 ```
 
-# Documents
+## Documents
 [Full instruction](https://www.concordia.ca/ginacody/aits/support/faq/connect-from-home.html)<br/>
 [Software availability](https://www.concordia.ca/it/services/comp-labs-encs/windows-software-public-labs.html)<br/>
 [cURL data for request](https://curl.trillworks.com/)<br/>
