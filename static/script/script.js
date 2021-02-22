@@ -7,7 +7,7 @@ let chosenSoftware = [];
 let chosenSoftwareCached = [];
 
 async function fetchSoftwareName() {
-  fetch("http://127.0.0.1:5000/fetchSoftwareName")
+  fetch("https://find-me-my-lab.herokuapp.com/fetchSoftwareName")
     .then((response) => response.json())
     // .then(data => console.log(data.result))
     .then((data) => setSoftwareArray(data.result))
@@ -257,7 +257,7 @@ function unhighlightSoftwareTag(softwareName) {
 // POST request to fetch room by software
 async function getRoomBySoftware(softwareArray) {
   displayLoader(loaderContainer);
-  const rooms = fetch("http://127.0.0.1:5000/room_by_software", {
+  const rooms = fetch("https://find-me-my-lab.herokuapp.com/room_by_software", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -272,7 +272,7 @@ async function getRoomBySoftware(softwareArray) {
 
 // post request to fetch lab host by room
 async function getHostByRoom(roomNumber) {
-  const hosts = fetch("http://127.0.0.1:5000/get_lab_host_by_software", {
+  const hosts = fetch("https://find-me-my-lab.herokuapp.com/get_lab_host_by_software", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -413,6 +413,7 @@ searchButton.addEventListener("click", async function () {
   ) {
     const rooms = await getRoomBySoftware(chosenSoftware);
     const hosts = await getHostByRoom(rooms.result);
+    console.log(hosts)
     displayHost(hosts, hostsContainer).then((e) =>
       removeLoader(loaderContainer)
     );

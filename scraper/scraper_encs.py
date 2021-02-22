@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import os
+# from settings.config import *
 
 cookies = {
     '$Cookie: SignOnDefault': '',
@@ -36,9 +37,11 @@ headers = {
 }
 
 data = {
-  'login_name': os.environ['ENCS_LOGIN_NAME'],
-  'user_pass': os.environ['ENCS_PASSWORD'],
-  'Authenticate': 'Authenticate'
+  'login_name': os.environ.get('ENCS_LOGIN_NAME'),
+  'user_pass': os.environ.get('ENCS_PASSWORD'),
+    # 'login_name': ENCS_LOGIN_NAME,
+    # 'user_pass': ENCS_PASSWORD,
+    'Authenticate': 'Authenticate'
 }
 
 url = "https://fis.encs.concordia.ca/helpdesk-cgi/available-hosts-result.cgi"
