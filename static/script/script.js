@@ -272,13 +272,16 @@ async function getRoomBySoftware(softwareArray) {
 
 // post request to fetch lab host by room
 async function getHostByRoom(roomNumber) {
-  const hosts = fetch("https://find-me-my-lab.herokuapp.com/get_lab_host_by_software", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      room_array: roomNumber,
-    }),
-  })
+  const hosts = fetch(
+    "https://find-me-my-lab.herokuapp.com/get_lab_host_by_software",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        room_array: roomNumber,
+      }),
+    }
+  )
     .then((e) => e.json())
     // .then(e => console.log(e))
     .catch((err) => console.log("Error"));
@@ -413,7 +416,7 @@ searchButton.addEventListener("click", async function () {
   ) {
     const rooms = await getRoomBySoftware(chosenSoftware);
     const hosts = await getHostByRoom(rooms.result);
-    console.log(hosts)
+    console.log(hosts);
     displayHost(hosts, hostsContainer).then((e) =>
       removeLoader(loaderContainer)
     );
